@@ -29,7 +29,10 @@ public class Main {
             return;
         }
 
-        Trainer trainer = new Trainer(trainSet, testSet);
+        // train and test
+        Trainer trainer = new Trainer(trainSet, testSet, a);
+        trainer.train();
+        trainer.test();
     }
 
     public static ArrayList<String[]> readCsvFile(String path) throws FileNotFoundException {
