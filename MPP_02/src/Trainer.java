@@ -26,12 +26,17 @@ public class Trainer {
                 perceptron.learn(1, a, v.getAttributes());
         }
     }
-    public void test(){
+    public double test(boolean printMoreInfo){
         double success = 0;
         for (MyVector vector : testSet) {
-            if (perceptron.ifCorrect(vector, activationClassLabel))
+            boolean correct = perceptron.ifCorrect(vector, activationClassLabel);
+            if (correct)
                 success++;
+            if(printMoreInfo){
+                System.out.print(vector + " \t\tnet(-bias): " + perceptron.compute(vector.getAttributes()) +
+                        (correct ? "\t\tPASS\n" : "\t\tFAIL\n"));
+            }
         }
-        System.out.println("Accuracy: " + (success/ testSet.size())*100 + "%");
+        return (success/ testSet.size())*100;
     }
 }

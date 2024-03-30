@@ -31,8 +31,7 @@ public class Main {
 
         // train and test
         Trainer trainer = new Trainer(trainSet, testSet, a);
-        trainer.train();
-        trainer.test();
+        UI.start(trainer);
     }
 
     public static ArrayList<String[]> readCsvFile(String path) throws FileNotFoundException {
