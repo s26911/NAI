@@ -11,13 +11,13 @@ public class Perceptron {
         return net;
     }
 
-    public void learn(int multiplier, double a, double[] inputVector) {
+    public void learn(int d, int y, double a, double[] inputVector) {
         double[] newWeights = new double[weights.length];
         for (int i = 0; i < weights.length; i++) {
-            newWeights[i] = weights[i] + (multiplier * a * inputVector[i]);
+            newWeights[i] = weights[i] + (d - y) * a * inputVector[i];
         }
         weights = newWeights;
-        bias = bias - (multiplier * a);
+        bias = bias - (d-y) * a;
     }
     public boolean ifCorrect(MyVector input, String activationLabel){
         double net = compute(input.getAttributes());
@@ -30,6 +30,9 @@ public class Perceptron {
 
     public Perceptron(int numberOfWeights) {
         weights = new double[numberOfWeights];
+        for (int i = 0; i < weights.length; i++) {
+            weights[i] = (Math.random() - 0.5) * 10;
+        }
         bias = Math.random() + 0.1;
     }
 }
