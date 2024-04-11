@@ -1,0 +1,11 @@
+Atak NotPetya (zwany również Petya) – seria cyberataków przeprowadzonych w czerwcu 2017 roku, wykonywanych za pomocą oprogramowania, które udawało ransomware, a tak naprawdę okazało się wiperem[1]. Atak sparaliżował firmy i agencje rządowe na całym świecie[2]. 
+
+Szkodliwe oprogramowanie wykorzystujące exploit (program mający na celu wykorzystanie błędów w oprogramowaniu)[3] o nazwie „EternalBlue” zostało opracowane przez amerykańską agencję bezpieczeństwa (NSA). Zostało ono wykorzystane przez grupę hakerów zwaną Shadow Brokers (TB)[4]. Udostępniła ona publicznie luki, które były ukierunkowane na zapory korporacyjne, oprogramowanie antywirusowe i produkty Microsoftu.
+
+EternalBlue wykorzystał lukę w protokole Microsoft Server Message Block 1.0 (SMBv1), i dzięki niej zyskał dostęp do zdalnego wykonania dostarczonego kodu na komputerze ofiary (użycie Double Pulsar, czyli tak zwanego backdoor). DublePulsar zapewnił cyberprzestępcom wysoką kontrolę nad systemem komputerowym. Backdoor używa trzech poleceń: ping, kill i exec. 
+
+Twórcy NotPetya posłużyli się złośliwym oprogramowaniem EternalBlue w połączeniu z Mimikatz, narzędziem open-source, które zbiera, a następnie wykorzystuje poświadczenia w systemach Windows. Mimikatz zwany jest „szwajcarskim scyzorykiem” hakerskim, ponieważ wykrada on dane, takie jak hasła, a co za tym idzie umożliwia całkowity dostęp do urządzenia. Od czasów jego stworzenia przez Benjamina Delpy[5] liczba ataków wciąż rośnie.
+
+Mimikatz jest możliwy do wykrycia, w tym celu trzeba monitorować procesy i interakcje związane z LSASS.exe[6]. Proces ten zapewnia dostęp do pamięci, gdzie są przechowywane dane uwierzytelniające. Przeskoki między hostami w organizacji, uruchamianie procesów z konta innego użytkownika mogą świadczyć o zainfekowaniu systemu[7].
+
+Mimo wydanej łatki na EthernalBlue przez firmę Windows po ataku WannaCry, oba narzędzia w połączeniu stworzyły kombinację nie do pokonania. Delpy powiedział „Możesz zainfekować komputery, które nie są załatane, a następnie możesz pobrać hasła z tych komputerów, aby zainfekować inne komputery, które są załatane”[8]. 

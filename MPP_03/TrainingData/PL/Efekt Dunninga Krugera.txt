@@ -1,0 +1,15 @@
+Efekt Dunninga-Krugera – błąd poznawczy[1] polegający na tym, że osoby niewykwalifikowane w jakiejś dziedzinie życia mają tendencję do przeceniania swoich umiejętności w tej dziedzinie, podczas gdy osoby wysoko wykwalifikowane mają tendencję do zaniżania oceny swoich umiejętności[2].
+
+Zjawisko to zostało opisane i udokumentowane przez Justina Krugera i Davida Dunninga z Uniwersytetu Cornella[3]. 
+
+Kruger i Dunning zwrócili uwagę na liczne wcześniejsze badania, które zdają się sugerować, że w przypadku umiejętności tak różnorodnych jak obsługa pojazdów mechanicznych, gra w szachy czy tenisa „ignorancja częściej jest przyczyną pewności siebie, niż wiedza” (jak to ujął Charles Darwin). Postawili oni hipotezę, że w przypadku umiejętności, którą każdy może posiąść w większym lub mniejszym stopniu, osoby niekompetentne:
+
+    nie dostrzegają swojego niskiego poziomu umiejętności,
+    nie potrafią prawidłowo ocenić poziomu umiejętności u siebie,
+    nie potrafią prawidłowo ocenić poziomu umiejętności u innych,
+    rozpoznają i uznają swój niski poziom umiejętności dopiero po odpowiednim treningu.
+
+Aby sprawdzić poprawność tej hipotezy, sprawdzili ją na studentach swojej uczelni, którzy zapisali się na różne kursy z psychologii.
+
+W serii doświadczeń Kruger i Dunning sprawdzili samoocenę dotyczącą myślenia logicznego, znajomości gramatyki i poczucia humoru. Po pokazaniu im wyników ich testów studenci zostali poproszeni o oszacowanie swojego poziomu, po czym grupa kompetentna w danej dziedzinie oceniła go poprawnie, podczas gdy ta niekompetentna wciąż go przeceniała. Jak zauważyli Dunning i Kruger, „podczas 4 doświadczeń uczestnicy notowani najniżej w testach dotyczących poczucia humoru, gramatyki i logiki znacznie przeceniali swoje osiągnięcia i umiejętności. Mimo iż wyniki testów plasowały ich w 12. percentylu, oni sami szacowali, że osiągnęli wynik plasujący ich w 62. percentylu”[3]. Jednocześnie ludzie naprawdę posiadający wiedzę zwykli nie doceniać swej kompetencji.
+
