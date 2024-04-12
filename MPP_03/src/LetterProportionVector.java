@@ -12,6 +12,7 @@ public class LetterProportionVector {
         for (char c : trainingText.getText().toCharArray()) {
             proportions["abcdefghijklmnopqrstuvwxyz".indexOf(c)]++;
         }
+        //normalize
         double max = Arrays.stream(proportions).max().orElseThrow();
         proportions = Arrays.stream(proportions).map(x -> x/=max).toArray();
     }

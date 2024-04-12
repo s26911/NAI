@@ -2,6 +2,7 @@
 public class Perceptron {
     double[] weights;
     double bias;
+    String label;
 
     public double compute(double[] input) {  // compute net - bias  value
         double net = -bias;
@@ -19,16 +20,17 @@ public class Perceptron {
         weights = newWeights;
         bias = bias - (d-y) * a;
     }
-    public boolean ifCorrect(MyVector input, String activationLabel){
-        double net = compute(input.getAttributes());
-        if(net >= 0 && input.getLabel().equals(activationLabel))
+    public boolean ifCorrect(LetterProportionVector input, String activationLabel){
+        double net = compute(input.getProportions());
+        if(net >= 0 && input.getLang().equals(activationLabel))
             return true;
-        if(net < 0 && !input.getLabel().equals(activationLabel))
+        if(net < 0 && !input.getLang().equals(activationLabel))
             return true;
         return false;
     }
 
-    public Perceptron(int numberOfWeights) {
+    public Perceptron(int numberOfWeights, String label) {
+        this.label = label;
         weights = new double[numberOfWeights];
         for (int i = 0; i < weights.length; i++) {
             weights[i] = (Math.random() - 0.5) * 10;
