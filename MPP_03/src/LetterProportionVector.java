@@ -14,7 +14,7 @@ public class LetterProportionVector {
         }
         //normalize
         double max = Arrays.stream(proportions).max().orElseThrow();
-        proportions = Arrays.stream(proportions).map(x -> x/=max).toArray();
+        proportions = Arrays.stream(proportions).map(x -> x /= max).toArray();
     }
 
     public String getLang() {

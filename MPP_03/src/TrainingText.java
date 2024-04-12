@@ -19,7 +19,7 @@ public class TrainingText {
         return text.replaceAll("[^a-zA-Z]", "").toLowerCase();
     }
 
-    public static TrainingText[] fetchTrainingTexts(String trainingDataDir){
+    public static TrainingText[] fetchTrainingTexts(String trainingDataDir) {
         ArrayList<TrainingText> trainingTexts = new ArrayList<>();
 
         try {
@@ -28,7 +28,7 @@ public class TrainingText {
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     if (file.getFileName().toString().endsWith(".txt")) {
                         String text = Files.readString(file);
-                        trainingTexts.add(new TrainingText(text, file.getParent().toString()));
+                        trainingTexts.add(new TrainingText(text, file.getParent().getFileName().toString()));
                     }
                     return FileVisitResult.CONTINUE;
                 }
@@ -50,6 +50,6 @@ public class TrainingText {
 
     @Override
     public String toString() {
-        return "LANG: " + lang + "\nTEXT: " + text.substring(0,50);
+        return "LANG: " + lang + "\nTEXT: " + text.substring(0, 50);
     }
 }
