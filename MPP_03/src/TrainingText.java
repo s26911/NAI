@@ -7,8 +7,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 
 public class TrainingText {
-    private String text;
-    private String lang;
+    private final String text;
+    private final String lang;
 
     public TrainingText(String text, String lang) {
         this.text = filter(text);
@@ -16,7 +16,7 @@ public class TrainingText {
     }
 
     private String filter(String text) {
-        return text.replaceAll("[^a-zA-Z]", "");
+        return text.replaceAll("[^a-zA-Z]", "").toLowerCase();
     }
 
     public static TrainingText[] fetchTrainingTexts(String trainingDataDir){
