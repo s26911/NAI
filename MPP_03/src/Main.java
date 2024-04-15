@@ -8,7 +8,7 @@ public class Main {
         String[] langs = Arrays.stream(texts).map(TrainingText::getLang).distinct().toArray(String[]::new);
 
         Layer layer = new Layer(langs);
-        layer.train(texts);
+//        layer.train(texts);
 
 //        //EN
 //        System.out.println(layer.classify(new TrainingText("The name \"Netherlands\" in modern Polish is usually used for the historical land[10][11][12] - it refers to the countries formerly under the rule of the Habsburgs (the Habsburg Netherlands, the Spanish Netherlands, the Austrian Netherlands)[13]. After the establishment of the independent Dutch state, the Polish language initially used various names derived from the form Nederland, from the form Holland, and descriptive forms (e.g. Confederate States). After the establishment of the modern Dutch state in 1830, the name Holland was used almost exclusively in Polish (in various spelling variants), and the name \"Netherlands\" practically fell into disuse in this sense[13]. An exception is the abbreviated name of the country \"Netherlands\", recommended for use in European Union documents[14]. In October 2019, the Dutch authorities decided to abandon the English term \"Holland\", previously used in marketing regarding this country, in favor of the name \"The Netherlands\", and the implementation of the change began at the beginning of 2020. This change is domestic in nature and concerns Dutch institutions, universities, offices and embassies, etc., and does not involve an appeal to other countries to apply a similar change in their languages. This did not change the recommended short name of this country in the language", null)));

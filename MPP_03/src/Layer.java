@@ -13,34 +13,42 @@ public class Layer {
     }
 
     // train the layer (using provided texts) until no progress is made or accuracy worsens
-    public double train(TrainingText[] trainingTexts) {
+    public String train(TrainingText[] trainingTexts) {
         ArrayList<TrainingText> data = new ArrayList<>(Arrays.asList(trainingTexts));
         Collections.shuffle(data);
 
-        int counter = 0;
-        double previousAccuracy = 0.0;
-        int accuracyStagnationCounter = 0;
-        while (true) {
-            int correct = 0;
-            for (TrainingText trainingText : data) {
-                LetterProportionVector vector = new LetterProportionVector(trainingText);
-                for (Perceptron perceptron : perceptrons) {
+        String results = "";
+        for (Perceptron perceptron : perceptrons) {
+            int counterOfTrainings = 0;
+            double previousAccuracy = 0.0;
+            int accuracyStagnationCounter = 0;
+
+            while (true) {
+                int correct = 0;
+                for (TrainingText text : data) {
+                    LetterProportionVector vector = new LetterProportionVector(text);
                     int y = perceptron.compute(vector.getProportions()) >= 0 ? 1 : 0;
                     int d = vector.getLang().equals(perceptron.label) ? 1 : 0;
                     if (y == d) correct++;
 
                     perceptron.learn(d, y, a, vector.getProportions());
                 }
-            }
 
-            counter++;
-            double currentAccuracy = correct * 100. / (data.size() * perceptrons.length);
-            if ((currentAccuracy < previousAccuracy && previousAccuracy > 0.85) || accuracyStagnationCounter++ > 5) {
-                System.out.println("Counter:\t" + counter);
-                return currentAccuracy;
+                counterOfTrainings++;
+                double currentAccuracy = correct * 100. / data.size();
+                accuracyStagnationCounter = currentAccuracy == previousAccuracy ? accuracyStagnationCounter + 1 : 0;
+
+                if ((currentAccuracy < previousAccuracy && currentAccuracy > 90) || accuracyStagnationCounter > 5) {
+                    results += "Perceptron for " + perceptron.label
+                            + "\n\tNumber of trainings: " + counterOfTrainings
+                            + "\n\tFinal accuracy: " + String.format("%.2f", currentAccuracy) + "%\n";
+                    break;
+                }
+
+                previousAccuracy = currentAccuracy;
             }
-            previousAccuracy = currentAccuracy;
         }
+        return results;
     }
 
     // classifies text into one of the available languages
@@ -54,23 +62,6 @@ public class Layer {
         }
 
         return "FAIL";
-    }
-
-    public void testAccuracy(TrainingText[] texts){
-        String[] langs = (String[]) Arrays.stream(texts).map(TrainingText::getLang).distinct().toArray();
-
-        for(var lang : langs){
-            TrainingText[] inLang = (TrainingText[]) Arrays.stream(texts).filter(t -> t.getLang().equals(lang)).toArray();
-
-            int count = 0;
-            for(var textInLang : inLang){
-                if (classify(textInLang).equals(textInLang.getLang()))
-                    count++;
-            }
-
-            System.out.println("For language " + lang + "Accuracy: " + count * 100./inLang.length);
-        }
-
     }
 
     // computes output vector

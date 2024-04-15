@@ -7,15 +7,12 @@ public class UI {
 
     public static void start(Layer layer, TrainingText[] texts) {
         System.out.println("Training...");
-        layer.train(texts);
+        String trainingResut = layer.train(texts);
 
-        System.out.println("Trained layer:\n" + layer);
         while (true) {
-            int option = pickOption(new String[]{"Test accuracy", "Input vectors", "Train once again", "Set new perceptron", "Change a", "Toggle \"more info\"", "Quit"});
+            int option = pickOption(new String[]{"Print train accuracy", "Input text", "Train once again", "Set new perceptron", "Change a", "Toggle \"more info\"", "Quit"});
             switch (option) {
-                case 1 -> {
-                    layer.testAccuracy(texts);
-                }
+                case 1 -> System.out.println(trainingResut);
 //                case 2 -> manualInput(layer.perceptron.weights.length, layer.perceptron);
 //                case 3 -> {
 //                    System.out.println("Training...");
