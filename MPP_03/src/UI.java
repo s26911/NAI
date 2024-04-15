@@ -2,7 +2,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class UI {
-    static boolean MORE_INFO = false;
     static Scanner scanner = new Scanner(System.in);
 
     public static void start(Layer layer, TrainingText[] texts) {
@@ -10,46 +9,40 @@ public class UI {
         String trainingResut = layer.train(texts);
 
         while (true) {
-            int option = pickOption(new String[]{"Print train accuracy", "Input text", "Train once again", "Set new perceptron", "Change a", "Toggle \"more info\"", "Quit"});
+            int option = pickOption(new String[]{"Print train accuracy", "Input text", "Train new layer", "Change a", "Quit"});
             switch (option) {
                 case 1 -> System.out.println(trainingResut);
                 case 2 -> manualInput(layer);
-//                case 3 -> {
-//                    System.out.println("Training...");
-//                    layer.train();
-//                    System.out.println("Trained perceptron: \n\tWeights: " + Arrays.toString(layer.perceptron.weights) +
-//                            "\n\tBias: " + layer.perceptron.bias);
-//                }
-//                case 4 -> {
-//                    layer.perceptron = new Perceptron(layer.perceptron.weights.length);
-//                    System.out.println("New perceptron: \n\tWeights: " + Arrays.toString(layer.perceptron.weights) +
-//                            "\n\tBias: " + layer.perceptron.bias);
-//                }
-//                case 5 -> changeA(layer);
-//                case 6 -> MORE_INFO = !MORE_INFO;
-//                case 7 -> {
-//                    scanner.close();
-//                    return;
-//                }
+                case 3 -> {
+                    System.out.println("Training...");
+                    layer = new Layer(Arrays.stream(texts).map(TrainingText::getLang).distinct().toArray(String[]::new));
+                    trainingResut = layer.train(texts);
+                    System.out.println("Finished training");
+                }
+                case 4 -> changeA(layer);
+                case 5 -> {
+                    scanner.close();
+                    return;
+                }
             }
         }
     }
 
-    //    private static void changeA(Trainer trainer) {
-//        System.out.println("Current a value: " + trainer.a);
-//        System.out.print("Please provide new value between 0 and 1 (exclusive): ");
-//        scanner.nextLine();
-//        while (true) {
-//            String input = scanner.nextLine();
-//            try {
-//                trainer.a = Double.parseDouble(input);
-//                return;
-//            } catch (NumberFormatException e) {
-//                System.out.println("Wrong format! Try again...");
-//            }
-//        }
-//    }
-//
+    private static void changeA(Layer layer) {
+        System.out.println("Current a value: " + layer.getA());
+        System.out.print("Please provide new value between 0 and 1 (exclusive): ");
+        scanner.nextLine();
+        while (true) {
+            String input = scanner.nextLine();
+            try {
+                layer.setA(Double.parseDouble(input));
+                return;
+            } catch (NumberFormatException e) {
+                System.out.println("Wrong format! Try again...");
+            }
+        }
+    }
+
     private static void manualInput(Layer layer) {
         System.out.println("Please insert text, confirm with single w, write q to quit: ");
         scanner.nextLine();
@@ -59,7 +52,7 @@ public class UI {
             String line = scanner.nextLine();
             if (line.equals("q"))
                 return;
-            if (line.equals("w")){
+            if (line.equals("w")) {
                 System.out.println(layer.classify(new TrainingText(input, null)));
                 input = "";
                 continue;

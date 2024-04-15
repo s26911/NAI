@@ -3,7 +3,9 @@ import java.util.function.DoubleToIntFunction;
 
 public class Layer {
     Perceptron[] perceptrons;
-    double a = 0.5;
+    private double a = 0.5;
+    private static final double minimalTrainingAccuracy = 90;
+    private static final double maxTrainingStagnationCount = 5;
 
     public Layer(String[] labels) {
         perceptrons = new Perceptron[labels.length];
@@ -38,7 +40,8 @@ public class Layer {
                 double currentAccuracy = correct * 100. / data.size();
                 accuracyStagnationCounter = currentAccuracy == previousAccuracy ? accuracyStagnationCounter + 1 : 0;
 
-                if ((currentAccuracy < previousAccuracy && currentAccuracy > 90) || accuracyStagnationCounter > 5) {
+                if ((currentAccuracy < previousAccuracy && currentAccuracy > minimalTrainingAccuracy)
+                        || accuracyStagnationCounter > maxTrainingStagnationCount) {
                     results += "Perceptron for " + perceptron.label
                             + "\n\tNumber of trainings: " + counterOfTrainings
                             + "\n\tFinal accuracy: " + String.format("%.2f", currentAccuracy) + "%\n";
@@ -89,6 +92,14 @@ public class Layer {
         }
 
         return output;
+    }
+
+    public double getA() {
+        return a;
+    }
+
+    public void setA(double a) {
+        this.a = a;
     }
 
     @Override
