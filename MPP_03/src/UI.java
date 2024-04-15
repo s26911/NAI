@@ -10,15 +10,12 @@ public class UI {
         layer.train(texts);
 
         System.out.println("Trained layer:\n" + layer);
-//        while (true) {
-//            int option = pickOption(new String[]{"Test accuracy", "Input vectors", "Train once again", "Set new perceptron", "Change a", "Toggle \"more info\"", "Quit"});
-//            switch (option) {
-//                case 1 -> {
-//                    double[] res = layer.test(MORE_INFO);
-//                    System.out.println("Overall accuracy: " + res[0] + "%");
-//                    System.out.println("Class 1 (" + layer.activationClassLabel + ") accuracy: " + res[1] + "%");
-//                    System.out.println("Class 2 accuracy: " + res[2] + "%");
-//                }
+        while (true) {
+            int option = pickOption(new String[]{"Test accuracy", "Input vectors", "Train once again", "Set new perceptron", "Change a", "Toggle \"more info\"", "Quit"});
+            switch (option) {
+                case 1 -> {
+                    layer.testAccuracy(texts);
+                }
 //                case 2 -> manualInput(layer.perceptron.weights.length, layer.perceptron);
 //                case 3 -> {
 //                    System.out.println("Training...");
@@ -37,8 +34,8 @@ public class UI {
 //                    scanner.close();
 //                    return;
 //                }
-//            }
-//        }
+            }
+        }
     }
 
 //    private static void changeA(Trainer trainer) {

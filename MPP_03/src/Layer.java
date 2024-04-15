@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.function.DoubleToIntFunction;
 
 public class Layer {
     Perceptron[] perceptrons;
@@ -53,6 +54,23 @@ public class Layer {
         }
 
         return "FAIL";
+    }
+
+    public void testAccuracy(TrainingText[] texts){
+        String[] langs = (String[]) Arrays.stream(texts).map(TrainingText::getLang).distinct().toArray();
+
+        for(var lang : langs){
+            TrainingText[] inLang = (TrainingText[]) Arrays.stream(texts).filter(t -> t.getLang().equals(lang)).toArray();
+
+            int count = 0;
+            for(var textInLang : inLang){
+                if (classify(textInLang).equals(textInLang.getLang()))
+                    count++;
+            }
+
+            System.out.println("For language " + lang + "Accuracy: " + count * 100./inLang.length);
+        }
+
     }
 
     // computes output vector
