@@ -13,7 +13,7 @@ public class UI {
             int option = pickOption(new String[]{"Print train accuracy", "Input text", "Train once again", "Set new perceptron", "Change a", "Toggle \"more info\"", "Quit"});
             switch (option) {
                 case 1 -> System.out.println(trainingResut);
-//                case 2 -> manualInput(layer.perceptron.weights.length, layer.perceptron);
+                case 2 -> manualInput(layer);
 //                case 3 -> {
 //                    System.out.println("Training...");
 //                    layer.train();
@@ -35,7 +35,7 @@ public class UI {
         }
     }
 
-//    private static void changeA(Trainer trainer) {
+    //    private static void changeA(Trainer trainer) {
 //        System.out.println("Current a value: " + trainer.a);
 //        System.out.print("Please provide new value between 0 and 1 (exclusive): ");
 //        scanner.nextLine();
@@ -50,27 +50,23 @@ public class UI {
 //        }
 //    }
 //
-//    private static void manualInput(int vecDim, Perceptron perceptron) {
-//        System.out.println("Vector should have dimension of " + vecDim);
-//        System.out.println("Please insert values separated with whitespaces or q to quit inserting vectors manually:");
-//        scanner.nextLine();
-//        while (true) {
-//            String input = scanner.nextLine().toLowerCase();
-//            if (input.equals("q"))
-//                return;
-//
-//            String[] data = input.split("\\s+");
-//            try {
-//                if (data.length != vecDim)
-//                    throw new NumberFormatException();
-//                MyVector vec = new MyVector(data, null);
-//                double net = perceptron.compute(vec.getAttributes());
-//                System.out.println("Net(-bias): " + net + (net >= 0 ? "\t\tFIRED" : "\t\tDIDN'T FIRE"));
-//            } catch (NumberFormatException e) {
-//                System.out.println("Wrong format! Try again...");
-//            }
-//        }
-//    }
+    private static void manualInput(Layer layer) {
+        System.out.println("Please insert text, confirm with single w, write q to quit: ");
+        scanner.nextLine();
+        String input = "";
+
+        while (true) {
+            String line = scanner.nextLine();
+            if (line.equals("q"))
+                return;
+            if (line.equals("w")){
+                System.out.println(layer.classify(new TrainingText(input, null)));
+                input = "";
+                continue;
+            }
+            input += line;
+        }
+    }
 
     private static int pickOption(String[] descriptions) {
         System.out.println("\nPlease pick an option:");
