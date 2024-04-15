@@ -16,6 +16,7 @@ public class Layer {
         ArrayList<TrainingText> data = new ArrayList<>(Arrays.asList(trainingTexts));
         Collections.shuffle(data);
 
+        int counter = 0;
         double previousAccuracy = 0.0;
         int accuracyStagnationCounter = 0;
         while (true) {
@@ -31,8 +32,10 @@ public class Layer {
                 }
             }
 
+            counter++;
             double currentAccuracy = correct * 100. / (data.size() * perceptrons.length);
             if ((currentAccuracy < previousAccuracy && previousAccuracy > 0.85) || accuracyStagnationCounter++ > 5) {
+                System.out.println("Counter:\t" + counter);
                 return currentAccuracy;
             }
             previousAccuracy = currentAccuracy;
@@ -79,5 +82,13 @@ public class Layer {
         return output;
     }
 
-
+    @Override
+    public String toString() {
+        String out = "";
+        for (int i = 0; i < perceptrons.length; i++) {
+            out += perceptrons[i].label + "\n\tWeights: " +
+                    Arrays.toString(perceptrons[i].weights) + "\n\tBias: " + perceptrons[i].bias + "\n";
+        }
+        return out;
+    }
 }
