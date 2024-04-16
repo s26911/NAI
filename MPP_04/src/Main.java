@@ -18,7 +18,14 @@ public class Main {
         }
 
         BayesClassificator classificator = new BayesClassificator(trainSet);
-
+        String[] test1 = new String[]{"mały","umiarkowana","słabe","mała"};
+        String[] test2 = new String[]{"miejski","niska","dobre","duża"};
+        String[] test3 = new String[]{"kompakt","umiarkowana","dobre","duża"};
+        String[] test4 = new String[]{"duży","umiarkowana","słabe","przeciętna"};
+        System.out.println(classificator.classify(test1));
+        System.out.println(classificator.classify(test2));
+        System.out.println(classificator.classify(test3));
+        System.out.println(classificator.classify(test4));
 
         //UI.start();
     }

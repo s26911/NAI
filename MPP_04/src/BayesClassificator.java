@@ -27,7 +27,7 @@ public class BayesClassificator {
 
         // for each column of distinct values ...
         for (int i = 0; i < columnsDistinctOptions.size() - 1; i++) {
-            double[] columnProbabilities = new double[columnsDistinctOptions.get(i).length * decisiveAttributesOptions.length];
+            double[] columnProbabilities = new double[(columnsDistinctOptions.get(i).length + 1) * decisiveAttributesOptions.length];
             int counter = 0;
 
             String[] columnOptions = columnsDistinctOptions.get(i);
@@ -52,8 +52,47 @@ public class BayesClassificator {
 
             }
 
+            // add also probabilities for decisive attributes
+            for (int j = 0, k = columnProbabilities.length - decisiveAttributesCounts.length; j < decisiveAttributesCounts.length; j++) {
+                columnProbabilities[k++] = decisiveAttributesCounts[j] / trainSet.size();
+            }
+
             probabilities.add(columnProbabilities);
         }
+    }
+
+    private int getIndexOf(String[] array, String key) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].equals(key)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public String classify(String[] row) {
+        double maxProbability = 0;
+        String maxProbabilityDecisiveValue = "";
+
+        // for each DECISIVE attribute
+        for (int i = 0; i < decisiveAttributesOptions.length; i++) {
+            double result = probabilities.getLast()[i];
+
+            // check each row + DECISIVE probability
+            for (int j = 0; j < row.length; j++) {
+                String value = row[j];
+                int index = getIndexOf(columnsDistinctOptions.get(j), value);
+                double valueProbability = probabilities.get(j)[index*decisiveAttributesOptions.length + i];
+                result *= valueProbability;
+            }
+
+            if(result > maxProbability){
+                maxProbability = result;
+                maxProbabilityDecisiveValue = decisiveAttributesOptions[i];
+            }
+        }
+
+        return maxProbabilityDecisiveValue;
     }
 
     private void calculateDistinctOptions() {
