@@ -17,13 +17,7 @@ public class Main {
             return;
         }
 
-        System.out.println("TRAIN SET: ");
-        trainSet.forEach(x -> System.out.println(Arrays.toString(x)));
-        System.out.println();
-
-        System.out.println("TEST SET: ");
-        testSet.forEach(x -> System.out.println(Arrays.toString(x)));
-        System.out.println();
+        BayesClassificator classificator = new BayesClassificator(trainSet);
 
 
         //UI.start();
