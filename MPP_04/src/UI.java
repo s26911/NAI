@@ -1,18 +1,25 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 public class UI {
     static Scanner scanner = new Scanner(System.in);
+    private static boolean DEBUG = false;
 
     public static void start(ArrayList<String[]> trainSet, ArrayList<String[]> testSet) {
         BayesClassificator bayesClassificator = new BayesClassificator(trainSet);
+        BiFunction<String[], Boolean, String> method = bayesClassificator::classify;
 
         while (true) {
-            int option = pickOption(new String[]{"Input attributes", "Quit"});
+            int option = pickOption(new String[]{"Input attributes", "Test classificator", "Toggle DEBUG", "Toggle method", "Quit"});
             switch (option) {
-                case 1 -> manualInput(bayesClassificator);
-                case 2 -> {
+                case 1 -> manualInput(bayesClassificator, method);
+                case 2 -> bayesClassificator.test(testSet, method, DEBUG);
+                case 3 -> DEBUG = !DEBUG;
+                case 4 -> method = pickOption(new String[]{"Precalculated", "On the fly"}) == 0 ?
+                        bayesClassificator::classify : bayesClassificator::classifyOnTheFly;
+                case 5 -> {
                     scanner.close();
                     return;
                 }
@@ -20,9 +27,9 @@ public class UI {
         }
     }
 
-    private static void manualInput(BayesClassificator bayes) {
+    private static void manualInput(BayesClassificator bayes, BiFunction<String[], Boolean, String> method) {
 
-        System.out.println("Please enter " + (bayes.columnCount - 1) + "attributes separated with , or q to quit: ");
+        System.out.println("Please enter " + (bayes.columnCount - 1) + " attributes separated with , or q to quit: ");
         scanner.nextLine();
         while (true) {
             String input = scanner.nextLine().toLowerCase().replaceAll("[^ęóąśłżźćńĘÓĄŚŁŻŹĆŃ\\w\\d\\s,;]", "");
@@ -33,7 +40,7 @@ public class UI {
             if (data.length != bayes.columnCount - 1)
                 System.out.println("Wrong format! Try again: ");
             else
-                System.out.println("Result: " + bayes.classifyOnTheGo(data));
+                System.out.println("Result: " + method.apply(data, DEBUG));
         }
     }
 

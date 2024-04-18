@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.function.BiFunction;
 
 public class BayesClassificator {
     ArrayList<String[]> trainSet;
@@ -15,6 +17,14 @@ public class BayesClassificator {
         calculateDistinctOptions();
         distinctLabels = columnsDistinctOptions.getLast();
         calculateProbabilities();
+    }
+
+    public void test(ArrayList<String[]> testSet, BiFunction<String[], Boolean, String> method, boolean debug) {
+        for (int i = 0; i < testSet.size(); i++) {
+            System.out.println("Row " + i + ": " + Arrays.toString(testSet.get(i)));
+            System.out.println(method.apply(testSet.get(i), debug));
+            System.out.println();
+        }
     }
 
 
@@ -74,7 +84,7 @@ public class BayesClassificator {
     }
 
     // classifies given row of data using already calculated probabilities
-    public String classify(String[] row) {
+    public String classify(String[] row, boolean debug) {
         double maxProbability = 0;
         String maxProbabilityDecisiveValue = "";
 
@@ -86,9 +96,12 @@ public class BayesClassificator {
             for (int j = 0; j < row.length; j++) {
                 String value = row[j];
                 int index = getIndexOf(columnsDistinctOptions.get(j), value);
+                if (index == -1) return "Unexpected input value! Could not find \"" + value + "\" in training set";
                 double valueProbability = probabilities.get(j)[index * distinctLabels.length + i];
                 result *= valueProbability;
             }
+
+            if (debug) System.out.printf("Probability for \"%s\": %f\n", distinctLabels[i], result);
 
             if (result > maxProbability) {
                 maxProbability = result;
@@ -100,7 +113,7 @@ public class BayesClassificator {
     }
 
     // classifies given row of data, calculates (only necessary) values on the go
-    public String classifyOnTheGo(String[] row) {
+    public String classifyOnTheFly(String[] row, boolean debug) {
         int numberOfRows = trainSet.size();
         String maxProbLabel = "";
         double maxProbability = -1;
@@ -133,6 +146,8 @@ public class BayesClassificator {
                 } else
                     thisProbability *= count / labelCounts[i];
             }
+
+            if (debug) System.out.printf("Probability for \"%s\": %f\n", distinctLabels[i], thisProbability);
 
             if (thisProbability > maxProbability) {
                 maxProbability = thisProbability;
