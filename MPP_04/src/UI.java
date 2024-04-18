@@ -8,10 +8,33 @@ public class UI {
     public static void start(ArrayList<String[]> trainSet, ArrayList<String[]> testSet) {
         BayesClassificator bayesClassificator = new BayesClassificator(trainSet);
 
+        while (true) {
+            int option = pickOption(new String[]{"Input attributes", "Quit"});
+            switch (option) {
+                case 1 -> manualInput(bayesClassificator);
+                case 2 -> {
+                    scanner.close();
+                    return;
+                }
+            }
+        }
     }
 
     private static void manualInput(BayesClassificator bayes) {
 
+        System.out.println("Please enter " + (bayes.columnCount - 1) + "attributes separated with , or q to quit: ");
+        scanner.nextLine();
+        while (true) {
+            String input = scanner.nextLine().toLowerCase().replaceAll("[^ęóąśłżźćńĘÓĄŚŁŻŹĆŃ\\w\\d\\s,;]", "");
+            if (input.equals("q"))
+                return;
+
+            String[] data = input.split("[\\s,;]+");
+            if (data.length != bayes.columnCount - 1)
+                System.out.println("Wrong format! Try again: ");
+            else
+                System.out.println("Result: " + bayes.classifyOnTheGo(data));
+        }
     }
 
     private static int pickOption(String[] descriptions) {
