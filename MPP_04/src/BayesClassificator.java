@@ -1,12 +1,11 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BayesClassificator {
     ArrayList<String[]> trainSet;
     ArrayList<double[]> probabilities;
-    ArrayList<String[]> columnsDistinctOptions;
-    String[] labelDistinctOptions;
-    int columnCount;
+    ArrayList<String[]> columnsDistinctOptions;     // including label column
+    String[] distinctLabels;
+    int columnCount;                                // including label column
 
     public BayesClassificator(ArrayList<String[]> trainSet) {
         this.trainSet = trainSet;
@@ -14,51 +13,54 @@ public class BayesClassificator {
         this.columnsDistinctOptions = new ArrayList<>();
         this.probabilities = new ArrayList<>();
         calculateDistinctOptions();
-        labelDistinctOptions = columnsDistinctOptions.getLast();
+        distinctLabels = columnsDistinctOptions.getLast();
         calculateProbabilities();
     }
 
+
+    // calculates probabilites for each VALUE (of each column) under the condition of each LABEL,
+    // e.g. for column {"sunny", "rainy"} and labels {"yes", "no"} this.probabilities will contain
+    // P("sunny" | "yes"), P("sunny" | "no"), P("rainy" | "yes"), P("rainy", "no")
     private void calculateProbabilities() {
-        double[] decisiveAttributesCounts = new double[labelDistinctOptions.length];
-        for (int i = 0; i < labelDistinctOptions.length; i++) {
+        // for each label count number of occurrences
+        double[] labelCounts = new double[distinctLabels.length];
+        for (int i = 0; i < distinctLabels.length; i++) {
             int finalI = i;
-            decisiveAttributesCounts[i] = trainSet.stream().filter(x -> x[columnCount - 1].equals(labelDistinctOptions[finalI])).count();
+            labelCounts[i] = trainSet.stream().filter(x -> x[columnCount - 1].equals(distinctLabels[finalI])).count();
         }
 
-        // for each column of distinct values ...
+        // for each column of distinct values ... (without column of labels)
         for (int i = 0; i < columnsDistinctOptions.size() - 1; i++) {
-            double[] columnProbabilities = new double[(columnsDistinctOptions.get(i).length) * labelDistinctOptions.length];
+            double[] columnProbabilities = new double[(columnsDistinctOptions.get(i).length) * distinctLabels.length];
             int counter = 0;
 
             String[] columnOptions = columnsDistinctOptions.get(i);
             // ... and for each OPTION from those distinct values ...
             for (String option : columnOptions) {
                 int finalI = i;
-                int finalCounter = counter;
                 // ... and for each of DECISIVE attributes option
-                for (int j = 0; j < labelDistinctOptions.length; j++) {
+                for (int j = 0; j < distinctLabels.length; j++) {
                     int finalJ = j;
 
                     // OPTION + DECISIVE combinations count / DECISIVE count
                     double combinationCount = trainSet.stream().
                             filter(x -> x[finalI].equals(option) &&
-                                    x[columnCount - 1].equals(labelDistinctOptions[finalJ]))
+                                    x[columnCount - 1].equals(distinctLabels[finalJ]))
                             .count();
 
-                    // wygładzanie
-                    double probability = combinationCount == 0 ? 1 / (decisiveAttributesCounts[finalJ] + columnOptions.length) : combinationCount / decisiveAttributesCounts[finalJ];
+                    // Laplace smoothing
+                    double probability = combinationCount == 0 ? 1 / (labelCounts[finalJ] + columnOptions.length) : combinationCount / labelCounts[finalJ];
                     columnProbabilities[counter++] = probability;
                 }
-
             }
-
 
             probabilities.add(columnProbabilities);
         }
 
-        double[] labelProbabilities = new double[labelDistinctOptions.length];
-        for (int i = 0; i < labelDistinctOptions.length; i++)
-            labelProbabilities[i] = decisiveAttributesCounts[i] / trainSet.size();
+        // add probabilities for labels (label x count / number of rows)
+        double[] labelProbabilities = new double[distinctLabels.length];
+        for (int i = 0; i < distinctLabels.length; i++)
+            labelProbabilities[i] = labelCounts[i] / trainSet.size();
         probabilities.add(labelProbabilities);
     }
 
@@ -71,80 +73,74 @@ public class BayesClassificator {
         return -1;
     }
 
+    // classifies given row of data using already calculated probabilities
     public String classify(String[] row) {
         double maxProbability = 0;
         String maxProbabilityDecisiveValue = "";
 
         // for each DECISIVE attribute
-        for (int i = 0; i < labelDistinctOptions.length; i++) {
-            System.out.println("PROB: " + 0);
+        for (int i = 0; i < distinctLabels.length; i++) {
             double result = probabilities.getLast()[i];
-            System.out.println("PROB: " + result);
 
             // check each row + DECISIVE probability
             for (int j = 0; j < row.length; j++) {
                 String value = row[j];
                 int index = getIndexOf(columnsDistinctOptions.get(j), value);
-                double valueProbability = probabilities.get(j)[index * labelDistinctOptions.length + i];
+                double valueProbability = probabilities.get(j)[index * distinctLabels.length + i];
                 result *= valueProbability;
-                System.out.println("PROB: " + result);
             }
-
-            System.out.println("Probability of  " + labelDistinctOptions[i] + ": " + result);
 
             if (result > maxProbability) {
                 maxProbability = result;
-                maxProbabilityDecisiveValue = labelDistinctOptions[i];
+                maxProbabilityDecisiveValue = distinctLabels[i];
             }
         }
 
-        System.out.println("RESULT: " + maxProbabilityDecisiveValue + ": " + maxProbability);
         return maxProbabilityDecisiveValue;
     }
 
-    public void classifyOnTheGo(String[] row) {
+    // classifies given row of data, calculates (only necessary) values on the go
+    public String classifyOnTheGo(String[] row) {
         int numberOfRows = trainSet.size();
         String maxProbLabel = "";
         double maxProbability = -1;
 
         // how many times each of the possible label values occurs in the trainSet, e.g. yes 56 times, no 12 times
-        int[] labelCounts = new int[labelDistinctOptions.length];
+        int[] labelCounts = new int[distinctLabels.length];
         for (int i = 0; i < labelCounts.length; i++) {
             int finalI = i;
             labelCounts[i] = (int) trainSet.stream()
-                    .filter(x -> x[columnCount - 1].equals(labelDistinctOptions[finalI]))
+                    .filter(x -> x[columnCount - 1].equals(distinctLabels[finalI]))
                     .count();
         }
 
-        for (int i = 0; i < labelDistinctOptions.length; i++) {
-            System.out.println("PROB: " + 0);
+        // calculates the probability for each possible label
+        for (int i = 0; i < distinctLabels.length; i++) {
             double thisProbability = (double) labelCounts[i] / numberOfRows;
-            System.out.println("PROB: " + thisProbability);
 
+            // for each attribute from argument row of data
             for (int j = 0; j < columnCount - 1; j++) {
                 int finalI = i;
                 int finalJ = j;
-                double thisColumnProbability = trainSet.stream()
-                        .filter(x -> x[finalJ].equals(row[finalJ]) && x[columnCount - 1].equals(labelDistinctOptions[finalI]))
+                // count attribute x + label y combination occurrences
+                double count = trainSet.stream()
+                        .filter(x -> x[finalJ].equals(row[finalJ]) && x[columnCount - 1].equals(distinctLabels[finalI]))
                         .count();
 
-                if (thisColumnProbability == 0) {
-                    thisColumnProbability = 1. / (labelCounts[i] + columnsDistinctOptions.get(j).length);
+                if (count == 0) {
+                    // Laplace smoothing
+                    thisProbability *= 1. / (labelCounts[i] + columnsDistinctOptions.get(j).length);
                 } else
-                    thisColumnProbability = thisColumnProbability / labelCounts[i];
-
-                thisProbability *= thisColumnProbability;
-                System.out.println("PROB: " + thisProbability);
+                    thisProbability *= count / labelCounts[i];
             }
-            System.out.println("Probability of  " + labelDistinctOptions[i] + ": " + thisProbability);
 
             if (thisProbability > maxProbability) {
                 maxProbability = thisProbability;
-                maxProbLabel = labelDistinctOptions[i];
+                maxProbLabel = distinctLabels[i];
             }
         }
 
-        System.out.println("RESULT: " + maxProbLabel + ": " + maxProbability);
+        return maxProbLabel;
     }
 
     private void calculateDistinctOptions() {
@@ -152,8 +148,5 @@ public class BayesClassificator {
             final int j = i;
             columnsDistinctOptions.add(trainSet.stream().map(row -> row[j]).distinct().toArray(String[]::new));
         }
-//        for (var entry : columnsDistinctOptions) {
-//            System.out.println(Arrays.toString(entry));
-//        }
     }
 }
