@@ -29,6 +29,8 @@ public class Main {
             return;
         }
 
+        KMeans km = new KMeans(test, k);
+        km.kMeans();
 
     }
 }
