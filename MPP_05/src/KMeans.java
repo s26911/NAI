@@ -22,9 +22,14 @@ public class KMeans {
         // 5 back to 2
 
         ArrayList<double[]> centroids = initCentroids();
+        double E = -1;
         while (true) {
             HashMap<Integer, ArrayList<double[]>> groups = assignGroups(centroids);
-            // ...
+            double currE = calculateE(groups, centroids);
+            if (currE == E)
+                return groups;
+            E = currE;
+            centroids = calculateCentroids(groups);
         }
     }
 
@@ -69,12 +74,28 @@ public class KMeans {
         return Math.sqrt(sum);
     }
 
-    public double calculateE() {
-        // ...
+    public double calculateE(HashMap<Integer, ArrayList<double[]>> groups, ArrayList<double[]> centroids) {
+        double sum = 0;
+        for (int i = 0; i < groups.size(); i++) {
+            for (int j = 0; j < groups.get(i).size(); j++) {
+                sum += Math.pow(calculateDistance(groups.get(i).get(j), centroids.get(i)), 2);
+            }
+        }
+        return sum;
     }
 
-    public void calculateCentroids() {
-        // ...
+    public ArrayList<double[]> calculateCentroids(HashMap<Integer, ArrayList<double[]>> groups) {
+        ArrayList<double[]> centroids = new ArrayList<>();
+        for (int i = 0; i < groups.size(); i++) {
+            ArrayList<double[]> groupMembers = groups.get(i);
+            double[] centroid = new double[rowSize];
+            for (int j = 0; j < centroid.length; j++) {
+                int finalJ = j;
+                centroid[j] = groupMembers.stream().map(x -> x[finalJ]).reduce(0., Double::sum)/groupMembers.size();
+            }
+            centroids.add(centroid);
+        }
+        return centroids;
     }
 
 }
