@@ -17,7 +17,7 @@ public class Main {
 
             if (k < 0)
                 throw new NumberFormatException();
-            if(k > test.size()){
+            if (k > test.size()) {
                 System.out.println("Value of k is greater than the size of test. Assuming maximum possible value");
                 k = test.size();
             }
@@ -29,8 +29,9 @@ public class Main {
             return;
         }
 
+        // execution
         KMeans km = new KMeans(test, k);
-        km.kMeans();
-
+        var result = km.start(5);
+        KMeans.printGroups(result);
     }
 }

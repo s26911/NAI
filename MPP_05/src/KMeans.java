@@ -1,42 +1,70 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.stream.Stream;
 
 public class KMeans {
     ArrayList<double[]> data;
     int rowSize;
     int k;
+    double bestE;
 
     public KMeans(ArrayList<double[]> data, int k) {
         this.data = data;
         rowSize = data.get(0).length;
         this.k = k;
+        this.bestE = -1.0;
     }
 
-    public HashMap<Integer, ArrayList<double[]>> kMeans() {
-        // 1 init
-        // 2 assign groups
-        // 3 calculate E
-        // if Eprev == Enow: end
-        // 4 calculate centroids
-        // 5 back to 2
+    public HashMap<Integer, ArrayList<double[]>> start(int numberOfTimes) {
+        double bestE = Double.MAX_VALUE;
+        HashMap<Integer, ArrayList<double[]>> bestGroups = new HashMap<>();
 
-        ArrayList<double[]> centroids = initCentroids();
-        double E = -1;
-        while (true) {
-            HashMap<Integer, ArrayList<double[]>> groups = assignGroups(centroids);
-            double currE = calculateE(groups, centroids);
-            if (currE == E)
-                return groups;
-            E = currE;
-            centroids = calculateCentroids(groups);
+        // repeat procedure {numberOfTimes}
+        for (int i = 0; i < numberOfTimes; i++) {
+            System.out.println("Loop " + (i + 1));
+            ArrayList<double[]> centroids = initCentroids();
+            double E = -1;
+            int iterationCounter = 1;
+
+            // repeat grouping and calculating centroids while E is changing
+            while (true) {
+                HashMap<Integer, ArrayList<double[]>> groups = assignGroups(centroids);
+                double currE = calculateE(groups, centroids);
+                System.out.println("\t" + iterationCounter++ + " iteration\tE = " + currE);
+
+                // loop end condition
+                if (currE == E) {
+                    if (currE < bestE) {
+                        bestE = currE;
+                        bestGroups = groups;
+                    }
+                    break;
+                }
+
+                E = currE;
+                centroids = calculateCentroids(groups);
+            }
+        }
+
+        System.out.println("Best E: " + bestE + "\n");
+        return bestGroups;
+    }
+
+    public static void printGroups(HashMap<Integer, ArrayList<double[]>> groups) {
+        for (int i = 0; i < groups.size(); i++) {
+            System.out.println("Group " + i + ":");
+            ArrayList<double[]> members = groups.get(i);
+            for (double[] member : members) {
+                System.out.println("\t" + Arrays.toString(member));
+            }
         }
     }
 
+    // randomly chooses k of the vectors as starting centroids
     private ArrayList<double[]> initCentroids() {
         ArrayList<double[]> centroids = new ArrayList<>();
         ArrayList<double[]> dataCopy = new ArrayList<>(data);
-        while(centroids.size() < k) {
+        while (centroids.size() < k) {
             int i = (int) (Math.random() * dataCopy.size());
             centroids.add(dataCopy.get(i));
             dataCopy.remove(i);
@@ -91,7 +119,7 @@ public class KMeans {
             double[] centroid = new double[rowSize];
             for (int j = 0; j < centroid.length; j++) {
                 int finalJ = j;
-                centroid[j] = groupMembers.stream().map(x -> x[finalJ]).reduce(0., Double::sum)/groupMembers.size();
+                centroid[j] = groupMembers.stream().map(x -> x[finalJ]).reduce(0., Double::sum) / groupMembers.size();
             }
             centroids.add(centroid);
         }
