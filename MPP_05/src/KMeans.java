@@ -29,6 +29,7 @@ public class KMeans {
             // repeat grouping and calculating centroids while E is changing
             while (true) {
                 HashMap<Integer, ArrayList<double[]>> groups = assignGroups(centroids);
+                centroids = calculateCentroids(groups);
                 double currE = calculateE(groups, centroids);
                 System.out.println("\t" + iterationCounter++ + " iteration\tE = " + currE);
 
@@ -42,7 +43,6 @@ public class KMeans {
                 }
 
                 E = currE;
-                centroids = calculateCentroids(groups);
             }
         }
 
