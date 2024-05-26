@@ -21,4 +21,13 @@ public class Util {
 
         return result;
     }
+
+    public static String NBytesAsString(int number, int n) {
+        String result = "";
+        for (int i = 0; i < n; i++) {
+            result = (number & 1) + result;
+            number >>>= 1;
+        }
+        return result;
+    }
 }
