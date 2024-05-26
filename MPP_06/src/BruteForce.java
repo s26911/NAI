@@ -12,7 +12,7 @@ public class BruteForce {
     }
 
     public int exec() {
-        int counter = 0, maxCounter = (int) Math.pow(2, numberOfItems) - 1;
+        int counter = 0, maxCounter = (int) Math.pow(2, numberOfItems);
         int bestSolution = 0, bestWeight= 0, bestValue = 0;
         while (counter++ < maxCounter) {
             int mask = 1, weight = 0, value = 0;
