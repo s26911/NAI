@@ -14,7 +14,7 @@ public class BruteForce {
     public int exec() {
         int counter = 0, maxCounter = (int) Math.pow(2, numberOfItems);
         int bestSolution = 0, bestWeight= 0, bestValue = 0;
-        while (counter++ < maxCounter) {
+        while (counter < maxCounter) {
             int mask = 1, weight = 0, value = 0;
             for (int i = 0; i < numberOfItems; i++, mask <<= 1) {
                 if ((counter & mask) != 0) {
@@ -24,12 +24,14 @@ public class BruteForce {
             }
 
             if(weight <= capacity && value > bestValue){
-                bestSolution = counter - 1;
+                bestSolution = counter;
                 bestWeight = weight;
                 bestValue = value;
                 System.out.println("Iter: " + counter + " solution: " + Util.NBytesAsString(bestSolution, numberOfItems));
                 System.out.println("Weight: " + bestWeight + " Value: " + bestValue + "\n");
             }
+
+            counter++;
         }
 
         System.out.println("\nFinal solution: " + Util.NBytesAsString(bestSolution, numberOfItems));
