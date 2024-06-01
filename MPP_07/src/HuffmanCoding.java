@@ -3,15 +3,15 @@ import java.util.HashMap;
 import java.util.TreeMap;
 
 public class HuffmanCoding {
-    TreeMap<String, Integer> workMap;
+    MyPrioQueue queue;
     HashMap<Character, String> finalCoding;
 
     public HuffmanCoding(ArrayList<int[]> values) {
-        workMap = new TreeMap<>();
+        queue = new MyPrioQueue();
         finalCoding = new HashMap<>();
 
         for (var elem : values){
-            workMap.put(String.valueOf((char)elem[0]), elem[1]);
+            queue.enqueue(elem[1], String.valueOf((char) elem[0]));
             finalCoding.put((char)elem[0], "");
         }
     }
