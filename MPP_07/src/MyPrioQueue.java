@@ -12,8 +12,11 @@ public class MyPrioQueue {
                 return;
             }
 
-            if (current.priority <= priority) {  // found a spot
-                if (prev == null) {  // beginning of a queue
+            check:
+            if (current.priority >= priority) {  // found a spot
+                if(current.priority == priority && current.data.compareTo(data) < 0)
+                    break check;
+                else if (prev == null) {  // beginning of a queue
                     head = new Node(priority, data, current);
                 } else {
                     prev.next = new Node(priority, data, current);
