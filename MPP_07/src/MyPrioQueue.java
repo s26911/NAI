@@ -2,7 +2,7 @@ public class MyPrioQueue {
     Node head;
 
     public void enqueue(int priority, String data) {
-       Node prev = null, current = head;
+        Node prev = null, current = head;
         while (true) {
             if (current == null) {  // end of queue
                 if (prev != null)
@@ -14,7 +14,7 @@ public class MyPrioQueue {
 
             check:
             if (current.priority >= priority) {  // found a spot
-                if(current.priority == priority && current.data.compareTo(data) < 0)
+                if (current.priority == priority && current.data.compareTo(data) < 0)
                     break check;
                 else if (prev == null) {  // beginning of a queue
                     head = new Node(priority, data, current);
@@ -36,10 +36,10 @@ public class MyPrioQueue {
         return result;
     }
 
-    public int count(){
+    public int count() {
         int count = 0;
         Node current = head;
-        while (current != null){
+        while (current != null) {
             count++;
             current = current.next;
         }
